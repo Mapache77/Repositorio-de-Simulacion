@@ -1,0 +1,33 @@
+name : Compilación del documento.tex de la carpeta Informes
+on: 
+  push:
+  branches:
+  - main # Detecta cambios en el repositorio principal para ejecutar el codigo
+
+jobs:
+  release_cv:
+  - name: "Ejecución Informe LaTex"
+runs-on: ubuntu-latest # Carga de la mpaquina virtual Linux
+
+steps:
+  - name: "checkout master"
+uses: actions/checkout@v1 #Revisión de archivos ene le repositorio
+
+- name: "Compilación del Informe"
+uses: xu-cheng/latex-action@master
+with:
+  root_file: Iformes/Indorme.tex # Compilacion .tex
+
+- name: "Revisión del PDF"
+run:
+  file Indorme.pdf | grep -q 'PDF'
+
+- name: "Carga del PDF a un URL fija"
+uses: "marvinpinto/action-automatic-releases@latest"
+with:
+  repo_token: "{{ secrets.PERSONAL_ACCESS_TOKEN}}"
+automati_release_tag: "latest"
+prerelease: true
+title: "Carga"
+files: 
+  Indorme.pdf
